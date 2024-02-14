@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState , useRef} from "react";
 import "./App.css";
 
 function App() {
@@ -6,22 +6,43 @@ function App() {
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [symbolAllowed, setSymbolAllowed] = useState(false);
   const [password , setPassword] = useState("");
+  
+  // useRef hook
+  const passwordRef = useRef(null)
 
-  function randomPassword(){
-    let str = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm";
-    if(numberAllowed) str += "0123456789";
-    if(symbolAllowed) str += "~`!@#$%^&*()_+-={[]}'/<,.>?";
-    let newPassword = "";
-    for(let i=0; i<length ; i++){
-      newPassword += str[Math.round(Math.random()*str.length)];
-    }
-    return newPassword
-  }
+  const passwordGenerator = useCallback(()=>{
+      let str = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm";
+      if(numberAllowed) str += "0123456789";
+      if(symbolAllowed) str += "~`!@#$%^&*()_+-={[]}'/<,.>?";
+      let newPassword = "";
+      for(let i=0; i<length ; i++){
+        newPassword += str[Math.round(Math.random()*str.length)];
+      }
+      setPassword(newPassword)
+  },[length , numberAllowed , symbolAllowed , setPassword])
+
+  // function randomPassword(){
+  //   let str = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm";
+  //   if(numberAllowed) str += "0123456789";
+  //   if(symbolAllowed) str += "~`!@#$%^&*()_+-={[]}'/<,.>?";
+  //   let newPassword = "";
+  //   for(let i=0; i<length ; i++){
+  //     newPassword += str[Math.round(Math.random()*str.length)]; 
+  //   }
+  //   return newPassword
+  // }
 
   useEffect(()=>{
     console.log(length, numberAllowed , symbolAllowed, password);
-    setPassword(randomPassword())
-  },[length , numberAllowed , symbolAllowed])
+    passwordGenerator();
+    // setPassword(randomPassword())
+  },[length , numberAllowed , symbolAllowed, passwordGenerator])
+
+  const copyPasswordToClipboard = useCallback( () => {
+    passwordRef.current?.select();
+    passwordRef.current?.setSelectionRange(0, 999);
+    window.navigator.clipboard.writeText(password)
+  },[password])
 
   return (
     <div className="flex bg-[#121212] h-screen justify-center items-center">
@@ -33,10 +54,13 @@ function App() {
             type="text"
             placeholder="password"
             value={password}
+            ref = {passwordRef}
             readOnly
           />
           <button className="grow-0 shrink-0 px-4 bg-blue-700 font-semibold text-white w-18" 
-            onClick={()=>navigator.clipboard.writeText(password)}>
+            // onClick={()=>navigator.clipboard.writeText(password)}
+            onClick = {copyPasswordToClipboard}
+            >
             Copy
           </button>
         </div>
@@ -46,9 +70,10 @@ function App() {
               id="lengthInput"
               type="range"
               min="6"
-              max="30"
+              max="100"
               value={length}
               onChange={(e) => setLength(e.target.value)}
+              className="overflow-hidden"  
             />
             <label className="text-orange-500 font-bold" htmlFor="lengthInput">
               Length ({length})
