@@ -19,7 +19,7 @@ function App() {
         newPassword += str[Math.round(Math.random()*str.length)];
       }
       setPassword(newPassword)
-  },[length , numberAllowed , symbolAllowed , setPassword])
+  },[length , numberAllowed , symbolAllowed, setPassword])
 
   // function randomPassword(){
   //   let str = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm";
@@ -40,7 +40,7 @@ function App() {
 
   const copyPasswordToClipboard = useCallback( () => {
     passwordRef.current?.select();
-    passwordRef.current?.setSelectionRange(0, 999);
+    passwordRef.current?.setSelectionRange(0, 20);
     window.navigator.clipboard.writeText(password)
   },[password])
 

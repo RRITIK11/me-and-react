@@ -3,6 +3,7 @@ import { InputBox } from "./components/index";
 import useCurrencyInfo from "./hooks/useCurrencyInfo";
 
 function App() {
+
   const [amount, setAmount] = useState(0);
   const [from, setFrom] = useState("usd");
   const [to, setTo] = useState("inr");
@@ -19,7 +20,7 @@ function App() {
     setConvertedAmount(amount);
     setAmount(convertedAmount);
   };
-
+ 
   const convert = () => {
     setConvertedAmount(amount * currencyInfo[to]);
   };
@@ -27,13 +28,14 @@ function App() {
   const BackgroundImage = "https://images.pexels.com/photos/4497591/pexels-photo-4497591.jpeg"
 
   return (
+
     <div
       className="w-full h-screen flex flex-wrap justify-center items-center bg-cover bg-no-repeat bg-[#212121]"
       style={{
         backgroundImage: `url('${BackgroundImage}')`,
       }}
     >
-      <div className="w-full">
+      {/* <div className="w-full"> */}
         <div className="w-full max-w-md mx-auto border border-gray-60 rounded-lg p-5 backdrop-blur-sm bg-white/30">
           
           <form
@@ -100,7 +102,7 @@ function App() {
 
           </form>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 }
